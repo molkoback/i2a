@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define VERSION "1.1.1"
+#define VERSION "1.1.2"
 
 static const char *usage_str = "usage: i2a [options] <image>\n";
 static const char *help_str = (
@@ -38,7 +38,7 @@ int main(
 	char *argv[]
 )
 {
-	// Init
+	// Init i2a
 	struct i2a_context ctx;
 	i2a_context_init(&ctx);
 	
@@ -63,30 +63,30 @@ int main(
 			break;
 		case 'x':
 			if ((ctx.cfg.max_width = atoi(optarg)) == 0) {
-				fprintf(stdout, "error: invalid width given\n");
+				fprintf(stdout, "error: invalid width '%s'\n", optarg);
 				return 1;
 			}
 			break;
 		case 'y':
 			if ((ctx.cfg.max_height = atoi(optarg)) == 0) {
-				fprintf(stdout, "error: invalid height given\n");
+				fprintf(stdout, "error: invalid height '%s'\n", optarg);
 				return 1;
 			}
 			break;
 		case 't':
 			if ((ctx.cfg.term_width_mul = atof(optarg)) == 0.0) {
-				fprintf(stdout, "error: invalid multiplier given\n");
+				fprintf(stdout, "error: invalid multiplier '%s'\n", optarg);
 				return 1;
 			}
 			break;
 		case 'b':
 			if ((ctx.cfg.blur = atof(optarg)) == 0.0) {
-				fprintf(stdout, "error: invalid blur given\n");
+				fprintf(stdout, "error: invalid blur '%s'\n", optarg);
 				return 1;
 			}
 			break;
 		default:
-			fprintf(stdout, "error: invalid parameter given\n");
+			fprintf(stdout, "error: invalid option '-%c'\n", optopt);
 			return 1;
 		}
 	}
