@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define VERSION "1.1.2"
+#define VERSION "1.1.3"
 
 static const char *usage_str = "usage: i2a [options] <image>\n";
 static const char *help_str = (
@@ -25,6 +25,7 @@ static const char *help_str = (
 	"  -b <double>       gaussian blur\n"
 	"  -i                invert colors\n"
 	"  -o                remove whitespace from the right\n"
+	"  -I                print info about the generated ascii\n"
 	"  -V                print version\n"
 );
 static const char *version_str = (
@@ -32,6 +33,17 @@ static const char *version_str = (
 	"Copyright (c) 2017 molko <molkoback@gmail.com>\n"
 	"Distributed under WTFPL v2\n"
 );
+
+void print_info(struct mat *m)
+{
+	fprintf(stdout, "\n");
+	for (int i = 0; i < m->width; i++) {
+		fprintf(stdout, "-");
+	}
+	fprintf(stdout, "\n");
+	fprintf(stdout, "Size: %dx%d\n", (int)m->width, (int)m->height);
+	fprintf(stdout, "Char count: %d\n", (int)mat_charcount(m));
+}
 
 int main(
 	int argc,
@@ -42,12 +54,14 @@ int main(
 	struct i2a_context ctx;
 	i2a_context_init(&ctx);
 	
+	int info_f = 0;
+	
 	// Disable getopt error messages
 	extern int opterr;
 	opterr = 0;
 	
 	int c;
-	while ((c = getopt(argc, argv, "hViox:y:t:b:")) != -1) {
+	while ((c = getopt(argc, argv, "hVioIx:y:t:b:")) != -1) {
 		switch(c) {
 		case 'h':
 			fprintf(stdout, "%s\n%s", usage_str, help_str);
@@ -60,6 +74,9 @@ int main(
 			break;
 		case 'o':
 			ctx.cfg.optimize_f = 1;
+			break;
+		case 'I':
+			info_f = 1;
 			break;
 		case 'x':
 			if ((ctx.cfg.max_width = atoi(optarg)) == 0) {
@@ -104,6 +121,9 @@ int main(
 	
 	// Print ascii
 	mat_print(ctx.ascii);
+	if (info_f) {
+		print_info(ctx.ascii);
+	}
 	mat_destroy(ctx.ascii);
 	return 0;
 }

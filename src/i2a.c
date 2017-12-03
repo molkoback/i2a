@@ -39,6 +39,8 @@ static void i2a_resize(
 	size_t *height
 )
 {
+	*width = (size_t)((double)(*width) * ctx->cfg.term_width_mul);
+	
 	size_t mw = ctx->cfg.max_width == 0 ? (*width) : ctx->cfg.max_width;
 	size_t mh = ctx->cfg.max_height == 0 ? (*height) : ctx->cfg.max_height;
 	double ratio = (double)(*width)/(double)(*height);
@@ -50,7 +52,6 @@ static void i2a_resize(
 		*width = mw;
 		*height = (size_t)(mw / ratio);
 	}
-	*width = (size_t)((double)(*width) * ctx->cfg.term_width_mul);
 }
 
 /* Converts normalized rgba to grayscale using the luminosity method. */

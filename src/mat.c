@@ -57,3 +57,18 @@ void mat_print(struct mat *m)
 		fprintf(stdout, "%s\n", m->data[y]);
 	}
 }
+
+/* Count non-0 characters. */
+size_t mat_charcount(struct mat *m)
+{
+	size_t count = 0;
+	for (size_t y = 0; y < m->height; y++) {
+		for (size_t x = m->width-1; x >= 0; x--) {
+			if (m->data[y][x] == '\0') {
+				break;
+			}
+			count++;
+		}
+	}
+	return count;
+}

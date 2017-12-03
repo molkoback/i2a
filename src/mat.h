@@ -30,4 +30,7 @@ void mat_optimize(struct mat *m);
 
 void mat_print(struct mat *m);
 
+/* Count non-0 characters. */
+size_t mat_charcount(struct mat *m);
+
 #endif
