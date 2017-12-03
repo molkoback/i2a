@@ -25,7 +25,7 @@
             J?9WWQQililililillililililllililidQQ@??    -???????'
 
 
-i2a is a simple tool for making ascii art.
+Convert images to ascii using AAlib and ImageMagick.
 
 Requirements:
   - ImageMagick

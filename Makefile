@@ -1,5 +1,5 @@
 cc = gcc
-src = src/i2a.c src/mat.c
+src = src/*.c
 out = i2a
 
 cflags = -std=c11 -pedantic -Wall -O2 -mtune=native -pipe
