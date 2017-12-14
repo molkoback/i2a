@@ -63,7 +63,7 @@ size_t mat_charcount(struct mat *m)
 {
 	size_t count = 0;
 	for (size_t y = 0; y < m->height; y++) {
-		for (size_t x = m->width-1; x >= 0; x--) {
+		for (size_t x = 0; x < m->width; x++) {
 			if (m->data[y][x] == '\0') {
 				break;
 			}
