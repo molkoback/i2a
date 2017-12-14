@@ -7,13 +7,14 @@
  */
 
 #include "i2a.h"
+#include "term.h"
 #include "mat.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
 
-#define VERSION "1.2.0"
+#define VERSION "1.2.1"
 
 static const char *usage_str = "usage: i2a [options] <image>\n";
 static const char *help_str = (
@@ -21,7 +22,8 @@ static const char *help_str = (
 	"  -h                print this help message\n"
 	"  -x <int>          maximum width\n"
 	"  -y <int>          maximum height\n"
-	"  -t <double>       terminal width multiplier\n"
+	"  -t                use the terminal width and height\n"
+	"  -m <double>       terminal width multiplier\n"
 	"  -i                invert colors\n"
 	"  -o                remove whitespace from the right\n"
 	"  -I                print info about the generated ascii\n"
@@ -60,7 +62,7 @@ int main(
 	opterr = 0;
 	
 	int c;
-	while ((c = getopt(argc, argv, "hVioIx:y:t:")) != -1) {
+	while ((c = getopt(argc, argv, "hVioIx:y:tm:")) != -1) {
 		switch(c) {
 		case 'h':
 			fprintf(stdout, "%s\n%s", usage_str, help_str);
@@ -90,6 +92,9 @@ int main(
 			}
 			break;
 		case 't':
+			get_term_size(&ctx.cfg.max_width, &ctx.cfg.max_height);
+			break;
+		case 'm':
 			if ((ctx.cfg.term_width_mul = atof(optarg)) == 0.0) {
 				fprintf(stdout, "error: invalid multiplier '%s'\n", optarg);
 				return 1;
