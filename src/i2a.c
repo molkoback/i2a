@@ -8,7 +8,7 @@
 
 #include "i2a.h"
 
-#include <wand/magick_wand.h>
+#include <MagickWand/MagickWand.h>
 #include <aalib.h>
 
 #define DEFAULT_TERM_WIDTH_MUL 1.8
@@ -21,7 +21,6 @@ static inline void i2a_config_init(struct i2a_config *cfg)
 	cfg->max_width = 0;
 	cfg->max_height = 0;
 	cfg->term_width_mul = DEFAULT_TERM_WIDTH_MUL;
-	cfg->blur = DEFAULT_BLUR;
 	cfg->file = NULL;
 }
 
@@ -94,10 +93,9 @@ static void aa_write_wand(
 	// Resize to virtual size
 	size_t vwidth = aa_imgwidth(aactx);
 	size_t vheight = aa_imgheight(aactx);
-	MagickResizeImage(
+	MagickAdaptiveResizeImage(
 		wand,
-		vwidth, vheight,
-		LanczosFilter, ctx->cfg.blur
+		vwidth, vheight
 	);
 	
 	// Write data to AAlib framebuffer

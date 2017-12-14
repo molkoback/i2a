@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define VERSION "1.1.3"
+#define VERSION "1.2.0"
 
 static const char *usage_str = "usage: i2a [options] <image>\n";
 static const char *help_str = (
@@ -22,7 +22,6 @@ static const char *help_str = (
 	"  -x <int>          maximum width\n"
 	"  -y <int>          maximum height\n"
 	"  -t <double>       terminal width multiplier\n"
-	"  -b <double>       gaussian blur\n"
 	"  -i                invert colors\n"
 	"  -o                remove whitespace from the right\n"
 	"  -I                print info about the generated ascii\n"
@@ -34,7 +33,7 @@ static const char *version_str = (
 	"Distributed under WTFPL v2\n"
 );
 
-void print_info(struct mat *m)
+static inline void print_info(struct mat *m)
 {
 	fprintf(stdout, "\n");
 	for (int i = 0; i < m->width; i++) {
@@ -61,7 +60,7 @@ int main(
 	opterr = 0;
 	
 	int c;
-	while ((c = getopt(argc, argv, "hVioIx:y:t:b:")) != -1) {
+	while ((c = getopt(argc, argv, "hVioIx:y:t:")) != -1) {
 		switch(c) {
 		case 'h':
 			fprintf(stdout, "%s\n%s", usage_str, help_str);
@@ -93,12 +92,6 @@ int main(
 		case 't':
 			if ((ctx.cfg.term_width_mul = atof(optarg)) == 0.0) {
 				fprintf(stdout, "error: invalid multiplier '%s'\n", optarg);
-				return 1;
-			}
-			break;
-		case 'b':
-			if ((ctx.cfg.blur = atof(optarg)) == 0.0) {
-				fprintf(stdout, "error: invalid blur '%s'\n", optarg);
 				return 1;
 			}
 			break;

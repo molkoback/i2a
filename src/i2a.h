@@ -19,7 +19,6 @@ struct i2a_config {
 	size_t max_width;
 	size_t max_height;
 	double term_width_mul;
-	double blur;
 	char *file;
 };
 
