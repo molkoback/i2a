@@ -13,6 +13,8 @@
 
 #include <stddef.h>
 
+#define I2A_VERSION "1.2.1"
+
 struct i2a_config {
 	int invert_f;
 	int optimize_f;

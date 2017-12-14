@@ -14,8 +14,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define VERSION "1.2.1"
-
 static const char *usage_str = "usage: i2a [options] <image>\n";
 static const char *help_str = (
 	"options:\n"
@@ -30,7 +28,7 @@ static const char *help_str = (
 	"  -V                print version\n"
 );
 static const char *version_str = (
-	"i2a v"VERSION"\n"
+	"i2a v"I2A_VERSION"\n"
 	"Copyright (c) 2017 molko <molkoback@gmail.com>\n"
 	"Distributed under WTFPL v2\n"
 );

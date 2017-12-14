@@ -12,7 +12,6 @@
 #include <aalib.h>
 
 #define DEFAULT_TERM_WIDTH_MUL 1.8
-#define DEFAULT_BLUR 0.01
 
 static inline void i2a_config_init(struct i2a_config *cfg)
 {
