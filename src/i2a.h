@@ -13,7 +13,13 @@
 
 #include <stddef.h>
 
-#define I2A_VERSION "1.2.1"
+#define I2A_VERSION "1.2.2"
+
+// i2a error codes
+#define I2A_OK 0
+#define I2A_ERR_FILE -1
+#define I2A_ERR_IMAGEMAGICK -2
+#define I2A_ERR_AA -3
 
 struct i2a_config {
 	int invert_f;
@@ -27,10 +33,11 @@ struct i2a_config {
 struct i2a_context {
 	struct i2a_config cfg;
 	struct mat *ascii;
-}; 
+};
 
 void i2a_context_init(struct i2a_context *ctx);
 
+/* Runs i2a and returns an error code. */
 int i2a_run(struct i2a_context *ctx);
 
 #endif

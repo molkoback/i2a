@@ -10,8 +10,9 @@
 #include "term.h"
 #include "mat.h"
 
-#include <stdlib.h>
+#include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 static const char *usage_str = "usage: i2a [options] <image>\n";
@@ -33,7 +34,17 @@ static const char *version_str = (
 	"Distributed under WTFPL v2\n"
 );
 
-static inline void print_info(struct mat *m)
+static void print_error(char *fmt, ...)
+{
+	char err[512];
+	va_list ap;
+	va_start(ap, fmt);
+	vsnprintf(err, 512, fmt, ap);
+	va_end(ap);
+	fprintf(stderr, "error: %s\n", err);
+}
+
+static inline void print_mat_info(struct mat *m)
 {
 	fprintf(stdout, "\n");
 	for (int i = 0; i < m->width; i++) {
@@ -79,13 +90,13 @@ int main(
 			break;
 		case 'x':
 			if ((ctx.cfg.max_width = atoi(optarg)) == 0) {
-				fprintf(stdout, "error: invalid width '%s'\n", optarg);
+				print_error("invalid width '%s'", optarg);
 				return 1;
 			}
 			break;
 		case 'y':
 			if ((ctx.cfg.max_height = atoi(optarg)) == 0) {
-				fprintf(stdout, "error: invalid height '%s'\n", optarg);
+				print_error("invalid height '%s'", optarg);
 				return 1;
 			}
 			break;
@@ -94,31 +105,44 @@ int main(
 			break;
 		case 'm':
 			if ((ctx.cfg.term_width_mul = atof(optarg)) == 0.0) {
-				fprintf(stdout, "error: invalid multiplier '%s'\n", optarg);
+				print_error("invalid multiplier '%s'", optarg);
 				return 1;
 			}
 			break;
 		default:
-			fprintf(stdout, "error: invalid option '-%c'\n", optopt);
+			print_error("invalid option '-%c'", optopt);
 			return 1;
 		}
 	}
 	if (optind < argc) {
 		ctx.cfg.file = argv[optind];
-	} else {
+	}
+	else {
 		fprintf(stdout, "%s", usage_str);
 		return 1;
 	}
 	
 	// Run the main program
-	if (i2a_run(&ctx) < 0) {
+	int err;
+	if ((err = i2a_run(&ctx)) < I2A_OK) {
+		switch(err) {
+		case I2A_ERR_FILE:
+			print_error("couldn't load image '%s'", ctx.cfg.file);
+			break;
+		case I2A_ERR_IMAGEMAGICK:
+			print_error("couldn't initialize ImageMagick");
+			break;
+		case I2A_ERR_AA:
+			print_error("couldn't initialize AAlib");
+			break;
+		}
 		return 1;
 	}
 	
 	// Print ascii
 	mat_print(ctx.ascii);
 	if (info_f) {
-		print_info(ctx.ascii);
+		print_mat_info(ctx.ascii);
 	}
 	mat_destroy(ctx.ascii);
 	return 0;

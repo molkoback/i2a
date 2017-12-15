@@ -11,6 +11,9 @@
 
 #include <stddef.h>
 
-void get_term_size(size_t *width, size_t *height);
+void get_term_size(
+	size_t *width,
+	size_t *height
+);
 
-#endif 
+#endif

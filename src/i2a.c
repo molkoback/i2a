@@ -122,7 +122,7 @@ static void aa_write_wand(
 }
 
 /* Creates ascii mat from MagickWand and saves it to ctx.ascii. */
-static void create_ascii(
+static int create_ascii(
 	struct i2a_context *ctx,
 	MagickWand *wand,
 	size_t width,
@@ -133,6 +133,9 @@ static void create_ascii(
 	aa_defparams.width = width;
 	aa_defparams.height = height;
 	aa_context *aactx = aa_init(&mem_d, &aa_defparams, NULL);
+	if (aactx == NULL) {
+		return I2A_ERR_AA;
+	}
 	
 	// Write wand to AAlib framebuffer
 	aa_write_wand(ctx, aactx, wand);
@@ -146,37 +149,37 @@ static void create_ascii(
 		}
 	}
 	aa_close(aactx);
+	return I2A_OK;
 }
 
+/* Runs i2a and returns an error code. */
 int i2a_run(struct i2a_context *ctx)
 {
-	int ret = -1;
+	int ret = I2A_OK;
 	
 	// Initialize ImageMagick
 	MagickWandGenesis();
 	if (IsMagickWandInstantiated() == MagickFalse) {
-		fprintf(stderr, "error: couldn't initialize ImageMagick\n");
-		return ret;
+		return I2A_ERR_IMAGEMAGICK;
 	}
 	
 	// Load image file
 	MagickWand *wand = NewMagickWand();
 	if (MagickReadImage(wand, ctx->cfg.file) == MagickFalse) {
-		fprintf(stderr, "error: couldn't load image '%s'\n", ctx->cfg.file);
+		ret = I2A_ERR_FILE;
 	}
 	else {
 		// Create mat
 		size_t width = MagickGetImageWidth(wand);
 		size_t height = MagickGetImageHeight(wand);
 		i2a_resize(ctx, &width, &height);
-		create_ascii(ctx, wand, width, height);
 		
-		// Optimize
-		if (ctx->cfg.optimize_f) {
-			mat_optimize(ctx->ascii);
+		if ((ret = create_ascii(ctx, wand, width, height)) == I2A_OK) {
+			// Optimize
+			if (ctx->cfg.optimize_f) {
+				mat_optimize(ctx->ascii);
+			}
 		}
-		
-		ret = 0;
 	}
 	
 	DestroyMagickWand(wand);

@@ -12,7 +12,10 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 
-void get_term_size(size_t *width, size_t *height)
+void get_term_size(
+	size_t *width,
+	size_t *height
+)
 {
 	struct winsize ws;
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
