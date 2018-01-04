@@ -15,11 +15,12 @@
 
 #define I2A_VERSION "1.2.2"
 
-// i2a error codes
-#define I2A_OK 0
-#define I2A_ERR_FILE -1
-#define I2A_ERR_IMAGEMAGICK -2
-#define I2A_ERR_AA -3
+enum {
+	I2A_OK = 0,
+	I2A_ERR_FILE = -1,
+	I2A_ERR_IMAGEMAGICK = -2,
+	I2A_ERR_AA = -3
+};
 
 struct i2a_config {
 	int invert_f;

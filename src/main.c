@@ -124,7 +124,7 @@ int main(
 	
 	// Run the main program
 	int err;
-	if ((err = i2a_run(&ctx)) < I2A_OK) {
+	if ((err = i2a_run(&ctx)) != I2A_OK) {
 		switch(err) {
 		case I2A_ERR_FILE:
 			print_error("couldn't load image '%s'", ctx.cfg.file);
