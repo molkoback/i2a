@@ -2,7 +2,7 @@ cc = gcc
 src = src/*.c
 out = i2a
 
-cflags = -std=c11 -pedantic -Wall -O2 -mtune=native -pipe
+cflags = -std=gnu11 -pedantic -Wall -O2 -mtune=native -pipe
 cflags += `pkg-config --cflags MagickWand`
 
 ldflags = `pkg-config --libs MagickWand`
